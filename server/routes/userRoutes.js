@@ -19,4 +19,18 @@ router.post("/register",async(req,res)=>{
     }
 })
 
+// to login user
+router.get("/login",async(req,res)=>{
+    try{
+        const{email,password}=req.body;
+        const existUser=await userModel.findOne({email});
+        if(!existUser || existUser.password!=password){
+            return res.status(400).json({message:"Invalid credentials"});
+        }
+        return res.status(201).json({message:"User login successfully",data:existUser});
+    }
+    catch(error){
+        return res.status(400).json({message:"Internal server error"});
+    }
+})
 module.exports=router
