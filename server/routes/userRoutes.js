@@ -20,7 +20,7 @@ router.post("/register",async(req,res)=>{
 })
 
 // to login user
-router.get("/login",async(req,res)=>{
+router.post("/login",async(req,res)=>{
     try{
         const{email,password}=req.body;
         const existUser=await userModel.findOne({email});

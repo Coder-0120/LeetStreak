@@ -1,2 +1,43 @@
-node_modules
-server/node_modules
+# ========================
+# Server
+# ========================
+server/node_modules/
+server/.env
+
+# ========================
+# Root node_modules (if ever installed here)
+# ========================
+node_modules/
+
+# ========================
+# Logs
+# ========================
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# ========================
+# Environment files
+# ========================
+.env
+.env.local
+.env.production
+
+# ========================
+# OS files
+# ========================
+.DS_Store
+Thumbs.db
+
+# ========================
+# IDE settings
+# ========================
+.vscode/
+.idea/
+
+# ========================
+# Build folders
+# ========================
+dist/
+build/
+coverage/
