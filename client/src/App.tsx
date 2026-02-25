@@ -5,9 +5,11 @@ import RegisterPage from "./Pages/registerPage";
 import Dashboard from "./Pages/dashboard";
 import HomePage from './Pages/homePage';
 
+
 const App = () => {
   return (
     <div>
+
         <Router>
             <Routes>
                 <Route path="/" element={<HomePage />} />
