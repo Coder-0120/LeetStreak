@@ -29,7 +29,7 @@ const LoginPage: React.FC = () => {
         formData
       );
 
-      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("userInfo", JSON.stringify(res.data));
       alert("Login successful 🎉");
       navigate("/dashboard");
     } catch (error: any) {
