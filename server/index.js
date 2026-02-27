@@ -9,6 +9,8 @@ app.use(cors());
 app.use(express.json());
 dotenv.config();
 connectDB();
+const checkAndSendReminders = require("./cron/reminderCron");
+checkAndSendReminders();
 app.get("/",(req,res)=>{
     res.send("hello world");
 })

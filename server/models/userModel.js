@@ -12,7 +12,18 @@ const userSchema=new mongoose.Schema({
     leetcodeUsername:{
         type:String,
         required:true 
-    }
+    },
+     //  Track when reminder was last sent
+    lastReminderSent: {
+      type: Date,
+      default: null,
+    },
+
+    //  Allow user to enable/disable reminders
+    remindersEnabled: {
+      type: Boolean,
+      default: true,
+    },
 },{
     timestamps:true 
 })

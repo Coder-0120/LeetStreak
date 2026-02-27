@@ -4,55 +4,85 @@ const router = express.Router();
 
 const LC_GQL = "https://leetcode.com/graphql";
 const headers = { "Content-Type": "application/json" };
+const { hasUserSubmittedToday } = require("../services/leetcodeService");
+
 
 // ── 1. Solve stats (existing, unchanged) ──────────────────────────────────────
-router.get("/:username", async (req, res) => {
-  const { username } = req.params;
-  try {
-    const response = await axios.post(LC_GQL, {
-      query: `
-        query userProfile($username: String!) {
-          matchedUser(username: $username) {
-            submitStatsGlobal {
-              acSubmissionNum { difficulty count }
-            }
-          }
-        }`,
-      variables: { username },
-    }, { headers });
-    res.json(response.data.data.matchedUser.submitStatsGlobal.acSubmissionNum);
-  } catch (err) {
-    res.status(500).json({ message: "Failed to fetch solve stats" });
-  }
-});
-
-// ── 2. Today's submission status (existing, unchanged) ────────────────────────
 router.get("/status/:username", async (req, res) => {
   const { username } = req.params;
+
   try {
-    const response = await axios.post(LC_GQL, {
-      query: `
-        query userCalendar($username: String!) {
-          matchedUser(username: $username) {
-            userCalendar { submissionCalendar }
-          }
-        }`,
-      variables: { username },
-    }, { headers });
+    const hasSubmittedToday = await hasUserSubmittedToday(username);
 
-    const calStr = response.data?.data?.matchedUser?.userCalendar?.submissionCalendar;
-    if (!calStr) return res.status(404).json({ message: "Calendar not found" });
-
-    const calendar = JSON.parse(calStr);
-    const now = new Date();
-    const utcToday = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()) / 1000;
-    const submissionsToday = calendar[utcToday] || 0;
-
-    res.json({ username, hasSubmittedToday: submissionsToday > 0, submissionsToday });
+    res.json({
+      username,
+      hasSubmittedToday,
+    });
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch submission status" });
   }
 });
+
+// ── 0. Difficulty stats (Easy / Medium / Hard / All)
+router.get("/:username", async (req, res) => {
+  const { username } = req.params;
+
+  try {
+    const response = await axios.post(LC_GQL, {
+      query: `
+        query userProblemsSolved($username: String!) {
+          matchedUser(username: $username) {
+            submitStats: submitStatsGlobal {
+              acSubmissionNum {
+                difficulty
+                count
+              }
+            }
+          }
+        }
+      `,
+      variables: { username },
+    }, { headers });
+
+    const stats =
+      response.data?.data?.matchedUser?.submitStats?.acSubmissionNum;
+
+    if (!stats) return res.status(404).json({ message: "Stats not found" });
+
+    res.json(stats); // returns All, Easy, Medium, Hard
+  } catch (err) {
+    console.error(err?.response?.data || err.message);
+    res.status(500).json({ message: "Failed to fetch stats" });
+  }
+});
+
+// // ── 2. Today's submission status (existing, unchanged) ────────────────────────
+// router.get("/status/:username", async (req, res) => {
+//   const { username } = req.params;
+//   try {
+//     const response = await axios.post(LC_GQL, {
+//       query: `
+//         query userCalendar($username: String!) {
+//           matchedUser(username: $username) {
+//             userCalendar { submissionCalendar }
+//           }
+//         }`,
+//       variables: { username },
+//     }, { headers });
+
+//     const calStr = response.data?.data?.matchedUser?.userCalendar?.submissionCalendar;
+//     if (!calStr) return res.status(404).json({ message: "Calendar not found" });
+
+//     const calendar = JSON.parse(calStr);
+//     const now = new Date();
+//     const utcToday = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()) / 1000;
+//     const submissionsToday = calendar[utcToday] || 0;
+
+//     res.json({ username, hasSubmittedToday: submissionsToday > 0, submissionsToday });
+//   } catch (err) {
+//     res.status(500).json({ message: "Failed to fetch submission status" });
+//   }
+// });
 
 // ── 3. NEW: Full profile (rank, name, avatar, country, beats%, languages, badges)
 router.get("/profile/:username", async (req, res) => {
