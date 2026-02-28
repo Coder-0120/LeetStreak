@@ -69,6 +69,11 @@ const Homepage: React.FC = () => {
   const vis = (id: string) => visibleSections.has(id);
   const px = (mousePos.x / (window.innerWidth || 1) - 0.5) * 24;
   const py = (mousePos.y / (window.innerHeight || 1) - 0.5) * 24;
+  const userInfo = localStorage.getItem("userInfo")? JSON.parse(localStorage.getItem("userInfo") as string) : null;
+  const handleLogout = () => {
+    localStorage.removeItem("userInfo");
+    window.location.href = "/login";
+  }
 
   return (
     <div style={s.root}>
@@ -96,8 +101,8 @@ const Homepage: React.FC = () => {
 
           {/* Desktop CTAs */}
           <div className="nav-ctas-desktop" style={s.navCtas}>
-            <a href="/login" style={s.navSignIn}>Sign in</a>
-            <a href="/register" style={s.navCta} className="cta-glow">Start Free →</a>
+            <a href={userInfo ? "/dashboard" : "/login"} style={s.navSignIn}>{userInfo ? "Dashboard" : "Sign in"}</a>
+            <a href={userInfo ? "#logout" : "/register"} style={s.navCta} className="cta-glow" onClick={handleLogout}>{userInfo ? "log out" : "Start Free →"}</a>
           </div>
 
           {/* Hamburger */}
@@ -120,8 +125,8 @@ const Homepage: React.FC = () => {
               <a key={label} href={href} style={s.mobileLink} onClick={() => setMenuOpen(false)}>{label}</a>
             ))}
             <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
-              <a href="/login" style={{ ...s.navSignIn, flex: 1, textAlign: "center", padding: "11px 0", borderRadius: 10, border: "1px solid rgba(255,255,255,0.1)" }}>Sign in</a>
-              <a href="/register" style={{ ...s.navCta, flex: 1, textAlign: "center", padding: "11px 0" }} className="cta-glow">Start Free →</a>
+              <a href={userInfo ? "/dashboard" : "/login"} style={{ ...s.navSignIn, flex: 1, textAlign: "center", padding: "11px 0", borderRadius: 10, border: "1px solid rgba(255,255,255,0.1)" }}>{userInfo ? `Dashboard` : "Sign in"}</a>
+              <a href={userInfo ? "#logout" : "/register"} style={{ ...s.navCta, flex: 1, textAlign: "center", padding: "11px 0" }} className="cta-glow" onClick={handleLogout}>{userInfo ? "log out" : "Start Free →"}</a>
             </div>
           </div>
         )}
@@ -164,7 +169,7 @@ const Homepage: React.FC = () => {
             </span>
           </p>
           <div style={s.heroCtas} className="fade-up-4">
-            <a href="/register" style={s.heroCtaPrimary} className="btn-primary-glow">🚀 Start Tracking Free</a>
+            <a href={userInfo ? "/dashboard" : "/register"} style={s.heroCtaPrimary} className="btn-primary-glow">🚀 Start Tracking Free</a>
             <a href="#how-it-works" style={s.heroCtaSecondary}>▶ See how it works</a>
           </div>
           <div style={s.heroMeta} className="fade-up-5">
@@ -348,7 +353,7 @@ const Homepage: React.FC = () => {
           <div style={s.sectionBadge}>🔥 START TODAY</div>
           <h2 style={{ fontSize: "clamp(24px,4vw,46px)", fontWeight: 900, color: "#f1f5f9", letterSpacing: "-1px", lineHeight: 1.2, marginTop: 14, marginBottom: 14 }}>Your streak is waiting.<br />Don't let it die tonight.</h2>
           <p style={{ fontSize: 15, color: "#6b7280", marginBottom: 28 }}>Join 12,000+ developers who never miss a day.</p>
-          <a href="/register" style={{ display: "inline-block", padding: "14px 32px", background: "linear-gradient(135deg,#ff6b2b,#ff9a5c)", color: "#fff", borderRadius: 14, textDecoration: "none", fontWeight: 800, fontSize: 16, marginBottom: 14 }} className="btn-primary-glow">🚀 Create Free Account</a>
+          <a href={userInfo ? "/dashboard" : "/register"} style={{ display: "inline-block", padding: "14px 32px", background: "linear-gradient(135deg,#ff6b2b,#ff9a5c)", color: "#fff", borderRadius: 14, textDecoration: "none", fontWeight: 800, fontSize: 16, marginBottom: 14 }} className="btn-primary-glow">{userInfo ? "Go to Dashboard" : "Start Free Account"}</a>
           <div style={{ fontSize: 13, color: "#4b5563" }}>No credit card · Takes 2 minutes · Cancel anytime</div>
         </div>
       </section>

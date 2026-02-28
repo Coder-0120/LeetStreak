@@ -204,7 +204,7 @@ const Dashboard: React.FC = () => {
       <nav style={s.navbar}>
         <div style={s.navBrand}>
           <span style={s.navIcon}>⚡</span>
-          <span style={s.navTitle}>Leet<span style={{ color: "#ff6b2b" }}>Streak</span></span>
+          <span style={s.navTitle} onClick={()=>window.location.href="/"}>Leet<span style={{ color: "#ff6b2b" }}>Streak</span></span>
         </div>
         {/* ── REMINDER TOGGLE ── */}
         <div style={s.reminderToggleWrap} title={reminders ? "Reminders ON — click to pause" : "Reminders OFF — click to enable"}>
@@ -557,7 +557,7 @@ const s: Record<string, React.CSSProperties> = {
   navbar:      { position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 28px", height: 56, background: "rgba(10,10,15,0.9)", borderBottom: "1px solid rgba(255,255,255,0.07)", backdropFilter: "blur(20px)", width: "100%" },
   navBrand:    { display: "flex", alignItems: "center", gap: 8 },
   navIcon:     { fontSize: 20 },
-  navTitle:    { fontSize: 18, fontWeight: 800, color: "#fff", letterSpacing: "-0.5px" },
+  navTitle:    { cursor: "pointer", fontSize: 18, fontWeight: 800, color: "#fff", letterSpacing: "-0.5px" },
   navUser:     { display: "flex", alignItems: "center", gap: 10 },
   avatar:      { width: 28, height: 28, borderRadius: "50%", border: "1.5px solid #fb923c", objectFit: "cover" as const },
   avatarFallback: { width: 28, height: 28, borderRadius: "50%", background: "linear-gradient(135deg,#fb923c,#f97316)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 12, fontWeight: 800 },
