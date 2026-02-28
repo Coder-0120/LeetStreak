@@ -1,6 +1,7 @@
 const express=require("express");
 const router=express.Router();
 const userModel=require("../models/userModel");
+const bcrypt=require("bcrypt");
 
 
 // to register new user
@@ -11,10 +12,12 @@ router.post("/register",async(req,res)=>{
         if(existUser){
             return res.status(400).json({message:"User already exist"});
         }
-        const newUser = await userModel.create({email,password,leetcodeUsername});
+        const salt=await bcrypt.genSalt(10);
+        const hashedPassword=await bcrypt.hash(password,salt);
+        const newUser = await userModel.create({email, password:hashedPassword, leetcodeUsername});
         return res.status(201).json({message:"User created successfully",data:newUser});
     }
-    catch{
+    catch(error){
         return res.status(500).json({message:"Internal server error"});
     }
 })
@@ -24,7 +27,12 @@ router.post("/login",async(req,res)=>{
     try{
         const{email,password}=req.body;
         const existUser=await userModel.findOne({email});
-        if(!existUser || existUser.password!=password){
+        
+        if(!existUser){
+            return res.status(400).json({message:"Invalid credentials"});
+        }
+        const isPasswordValid=await bcrypt.compare(password,existUser.password);
+        if(!isPasswordValid){
             return res.status(400).json({message:"Invalid credentials"});
         }
         return res.status(201).json({message:"User login successfully",data:existUser});
