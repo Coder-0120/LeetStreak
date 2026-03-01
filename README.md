@@ -69,6 +69,8 @@ It ensures you never lose consistency while giving you full control over notific
 🎉 Success & error alerts  
 ⚠️ Reminder alerts  
 💡 Real-time feedback  
+<img width="538" height="538" alt="image" src="https://github.com/user-attachments/assets/d3c5cf97-8e41-4617-968c-e2627c1f87fd" />
+
 
 ---
 
