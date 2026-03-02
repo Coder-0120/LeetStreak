@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
+
 interface LoginForm {
   email: string;
   password: string;
@@ -74,7 +75,6 @@ const LoginPage: React.FC = () => {
     setError(null);
     try {
       const res = await axios.post("http://localhost:5000/api/user/login", formData);
-      localStorage.setItem("userInfo", JSON.stringify(res.data));
       navigate("/dashboard");
     } catch (err: any) {
       setError(err?.response?.data?.message || "Invalid email or password");

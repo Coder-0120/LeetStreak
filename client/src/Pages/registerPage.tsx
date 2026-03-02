@@ -34,7 +34,7 @@ const RegisterPage: React.FC = () => {
     try {
       await axios.post("http://localhost:5000/api/user/register", formData);
       setSuccess(true);
-      setTimeout(() => navigate("/login"), 2000);
+      setTimeout(() => navigate("/dashboard"), 2000);
     } catch (err: any) {
       setError(err?.response?.data?.message || "Registration failed. Please try again.");
     } finally {

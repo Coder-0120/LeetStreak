@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import axios from "axios";
 
 const Homepage: React.FC = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -7,8 +8,27 @@ const Homepage: React.FC = () => {
   const [counter, setCounter] = useState({ users: 0, solved: 0, streaks: 0 });
   const [typedText, setTypedText] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
   const fullText = "Never break your streak again.";
+
+  // ── Check auth via JWT cookie ──
+  useEffect(() => {
+    axios.get("http://localhost:5000/api/user/me")
+      .then(() => setIsLoggedIn(true))
+      .catch(() => setIsLoggedIn(false));
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await axios.post("http://localhost:5000/api/user/logout");
+    } catch (err) {
+      console.error("Logout error", err);
+    } finally {
+      setIsLoggedIn(false);
+      window.location.href = "/login";
+    }
+  };
 
   useEffect(() => {
     let i = 0;
@@ -69,11 +89,6 @@ const Homepage: React.FC = () => {
   const vis = (id: string) => visibleSections.has(id);
   const px = (mousePos.x / (window.innerWidth || 1) - 0.5) * 24;
   const py = (mousePos.y / (window.innerHeight || 1) - 0.5) * 24;
-  const userInfo = localStorage.getItem("userInfo")? JSON.parse(localStorage.getItem("userInfo") as string) : null;
-  const handleLogout = () => {
-    localStorage.removeItem("userInfo");
-    window.location.href = "/login";
-  }
 
   return (
     <div style={s.root}>
@@ -101,8 +116,18 @@ const Homepage: React.FC = () => {
 
           {/* Desktop CTAs */}
           <div className="nav-ctas-desktop" style={s.navCtas}>
-            <a href={userInfo ? "/dashboard" : "/login"} style={s.navSignIn}>{userInfo ? "Dashboard" : "Sign in"}</a>
-            <a href={userInfo ? "#logout" : "/register"} style={s.navCta} className="cta-glow" onClick={handleLogout}>{userInfo ? "log out" : "Start Free →"}</a>
+            <a href={isLoggedIn ? "/dashboard" : "/login"} style={s.navSignIn}>
+              {isLoggedIn ? "Dashboard" : "Sign in"}
+            </a>
+            {isLoggedIn ? (
+              <button style={{ ...s.navCta, border: "none", cursor: "pointer" }} className="cta-glow" onClick={handleLogout}>
+                Log out
+              </button>
+            ) : (
+              <a href="/register" style={s.navCta} className="cta-glow">
+                Start Free →
+              </a>
+            )}
           </div>
 
           {/* Hamburger */}
@@ -125,8 +150,29 @@ const Homepage: React.FC = () => {
               <a key={label} href={href} style={s.mobileLink} onClick={() => setMenuOpen(false)}>{label}</a>
             ))}
             <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
-              <a href={userInfo ? "/dashboard" : "/login"} style={{ ...s.navSignIn, flex: 1, textAlign: "center", padding: "11px 0", borderRadius: 10, border: "1px solid rgba(255,255,255,0.1)" }}>{userInfo ? `Dashboard` : "Sign in"}</a>
-              <a href={userInfo ? "#logout" : "/register"} style={{ ...s.navCta, flex: 1, textAlign: "center", padding: "11px 0" }} className="cta-glow" onClick={handleLogout}>{userInfo ? "log out" : "Start Free →"}</a>
+              
+                <a href={isLoggedIn ? "/dashboard" : "/login"}
+                style={{ ...s.navSignIn, flex: 1, textAlign: "center", padding: "11px 0", borderRadius: 10, border: "1px solid rgba(255,255,255,0.1)" }}
+              >
+                {isLoggedIn ? "Dashboard" : "Sign in"}
+              </a>
+              {isLoggedIn ? (
+                <button
+                  style={{ ...s.navCta, flex: 1, textAlign: "center", padding: "11px 0", border: "none", cursor: "pointer" }}
+                  className="cta-glow"
+                  onClick={handleLogout}
+                >
+                  Log out
+                </button>
+              ) : (
+                
+                  <a href="/register"
+                  style={{ ...s.navCta, flex: 1, textAlign: "center", padding: "11px 0" }}
+                  className="cta-glow"
+                >
+                  Start Free →
+                </a>
+              )}
             </div>
           </div>
         )}
@@ -169,7 +215,9 @@ const Homepage: React.FC = () => {
             </span>
           </p>
           <div style={s.heroCtas} className="fade-up-4">
-            <a href={userInfo ? "/dashboard" : "/register"} style={s.heroCtaPrimary} className="btn-primary-glow">🚀 Start Tracking Free</a>
+            <a href={isLoggedIn ? "/dashboard" : "/register"} style={s.heroCtaPrimary} className="btn-primary-glow">
+              🚀 Start Tracking Free
+            </a>
             <a href="#how-it-works" style={s.heroCtaSecondary}>▶ See how it works</a>
           </div>
           <div style={s.heroMeta} className="fade-up-5">
@@ -353,7 +401,13 @@ const Homepage: React.FC = () => {
           <div style={s.sectionBadge}>🔥 START TODAY</div>
           <h2 style={{ fontSize: "clamp(24px,4vw,46px)", fontWeight: 900, color: "#f1f5f9", letterSpacing: "-1px", lineHeight: 1.2, marginTop: 14, marginBottom: 14 }}>Your streak is waiting.<br />Don't let it die tonight.</h2>
           <p style={{ fontSize: 15, color: "#6b7280", marginBottom: 28 }}>Join 12,000+ developers who never miss a day.</p>
-          <a href={userInfo ? "/dashboard" : "/register"} style={{ display: "inline-block", padding: "14px 32px", background: "linear-gradient(135deg,#ff6b2b,#ff9a5c)", color: "#fff", borderRadius: 14, textDecoration: "none", fontWeight: 800, fontSize: 16, marginBottom: 14 }} className="btn-primary-glow">{userInfo ? "Go to Dashboard" : "Start Free Account"}</a>
+          
+            <a href={isLoggedIn ? "/dashboard" : "/register"}
+            style={{ display: "inline-block", padding: "14px 32px", background: "linear-gradient(135deg,#ff6b2b,#ff9a5c)", color: "#fff", borderRadius: 14, textDecoration: "none", fontWeight: 800, fontSize: 16, marginBottom: 14 }}
+            className="btn-primary-glow"
+          >
+            {isLoggedIn ? "Go to Dashboard" : "Start Free Account"}
+          </a>
           <div style={{ fontSize: 13, color: "#4b5563" }}>No credit card · Takes 2 minutes · Cancel anytime</div>
         </div>
       </section>
@@ -480,7 +534,7 @@ const s: Record<string, React.CSSProperties> = {
   navLink:     { color: "#9ca3af", textDecoration: "none", fontSize: 14, fontWeight: 500, transition: "color 0.2s" },
   navCtas:     { display: "flex", gap: 10, alignItems: "center" },
   navSignIn:   { color: "#9ca3af", textDecoration: "none", fontSize: 14, fontWeight: 500, padding: "7px 14px" },
-  navCta:      { padding: "8px 18px", background: "linear-gradient(135deg,#ff6b2b,#ff9a5c)", color: "#fff", borderRadius: 9, textDecoration: "none", fontSize: 13, fontWeight: 700, whiteSpace: "nowrap" as const },
+  navCta:      { padding: "8px 18px", background: "linear-gradient(135deg,#ff6b2b,#ff9a5c)", color: "#fff", borderRadius: 9, textDecoration: "none", fontSize: 13, fontWeight: 700, whiteSpace: "nowrap" as const, fontFamily: "'Outfit', sans-serif" },
   hamburger:   { display: "none", flexDirection: "column" as const, gap: 5, background: "none", border: "none", cursor: "pointer", padding: 6, marginLeft: "auto" },
   hamLine:     { display: "block", width: 22, height: 2, background: "#9ca3af", borderRadius: 2, transition: "all 0.25s ease", transformOrigin: "center" },
   mobileMenu:  { padding: "16px 24px 20px", display: "flex", flexDirection: "column" as const, gap: 4, background: "rgba(6,6,12,0.98)", borderTop: "1px solid rgba(255,255,255,0.07)" },
@@ -529,37 +583,30 @@ const CSS = `
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: #06060c; }
   ::-webkit-scrollbar-thumb { background: rgba(255,107,43,0.4); border-radius: 99px; }
-
   .cursor-dot  { position: fixed; width: 6px; height: 6px; background: #ff6b2b; border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); }
   .cursor-ring { position: fixed; width: 26px; height: 26px; border: 1.5px solid rgba(255,107,43,0.45); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: all 0.1s ease; }
   @media (hover: none) { .cursor-dot, .cursor-ring { display: none; } }
-
   .float-symbols { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
   .float-sym { position: absolute; font-family: 'JetBrains Mono', monospace; font-weight: 700; animation: floatSym linear infinite; user-select: none; }
   @keyframes floatSym { 0%{transform:translateY(0) rotate(0deg)} 25%{transform:translateY(-16px) rotate(3deg)} 75%{transform:translateY(10px) rotate(-3deg)} 100%{transform:translateY(0) rotate(0deg)} }
-
   .shimmer-text { background: linear-gradient(90deg,#ff6b2b,#ff9a5c,#fbbf24,#ff6b2b); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer 3s linear infinite; }
   @keyframes shimmer { to { background-position: 200% center; } }
   .cursor-blink { animation: blink 1s step-end infinite; }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-
   .fade-up-1 { animation: fadeUp 0.6s ease 0.1s both; }
   .fade-up-2 { animation: fadeUp 0.6s ease 0.25s both; }
   .fade-up-3 { animation: fadeUp 0.6s ease 0.4s both; }
   .fade-up-4 { animation: fadeUp 0.6s ease 0.55s both; }
   .fade-up-5 { animation: fadeUp 0.6s ease 0.7s both; }
   @keyframes fadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:none} }
-
   .hero-float { animation: heroFloat 6s ease-in-out infinite; }
   @keyframes heroFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
   .preview-bar-fill { animation: barGrow 1.5s cubic-bezier(0.22,1,0.36,1) 1s both; }
   @keyframes barGrow { from{width:0!important} }
-
   .ticker-track { display: inline-flex; white-space: nowrap; animation: ticker 32s linear infinite; padding-left: 100%; }
   @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
   .bounce { animation: bounce 2s ease-in-out infinite; }
   @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(-8px)} }
-
   .nav-link:hover { color: #f1f5f9 !important; }
   .cta-glow { box-shadow: 0 0 18px rgba(255,107,43,0.3); transition: box-shadow 0.3s, opacity 0.2s; }
   .cta-glow:hover { box-shadow: 0 0 30px rgba(255,107,43,0.5); opacity: 0.9; }
@@ -571,30 +618,24 @@ const CSS = `
   .feat-card:hover { transform: translateY(-5px); box-shadow: 0 18px 40px rgba(0,0,0,0.4) !important; }
   .test-card { transition: transform 0.22s, border-color 0.22s; }
   .test-card:hover { transform: translateY(-4px); border-color: rgba(255,107,43,0.22) !important; }
-
-  /* ── RESPONSIVE ── */
   @media (max-width: 1024px) {
     .feat-grid { grid-template-columns: repeat(2, 1fr) !important; }
     .test-grid { grid-template-columns: repeat(2, 1fr) !important; }
     .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
   }
-
   @media (max-width: 768px) {
     .nav-links-desktop { display: none !important; }
     .nav-ctas-desktop  { display: none !important; }
     .hamburger         { display: flex !important; }
     body               { cursor: auto !important; }
-
     .hero-preview { display: none !important; }
     .step-row     { flex-direction: column !important; align-items: flex-start !important; }
   }
-
   @media (max-width: 600px) {
     .feat-grid   { grid-template-columns: 1fr !important; }
     .test-grid   { grid-template-columns: 1fr !important; }
     .stats-grid  { grid-template-columns: 1fr 1fr !important; }
   }
-
   @media (max-width: 400px) {
     .stats-grid { grid-template-columns: 1fr !important; }
   }
