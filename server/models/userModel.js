@@ -13,6 +13,7 @@ const userSchema=new mongoose.Schema({
         type:String,
         required:true 
     },
+   
      //  Track when reminder was last sent
     lastReminderSent: {
       type: Date,
