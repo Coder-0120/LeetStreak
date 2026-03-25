@@ -17,7 +17,7 @@ app.use(cookieParser());
 dotenv.config();
 connectDB();
 const checkAndSendReminders = require("./cron/reminderCron");
-// checkAndSendReminders();
+checkAndSendReminders();
 app.get("/",(req,res)=>{
     res.send("hello world");
 })
