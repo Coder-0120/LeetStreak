@@ -1,31 +1,32 @@
-const mongoose=require("mongoose");
-const userSchema=new mongoose.Schema({
-    email:{
-        type:String,
-        unique:true,
-        required:true   
-    },
-    password:{
-        type:String,
-        required:true
-    },
-    leetcodeUsername:{
-        type:String,
-        required:true 
-    },
-   
-     //  Track when reminder was last sent
-    lastReminderSent: {
-      type: Date,
-      default: null,
-    },
+const mongoose = require("mongoose");
 
-    //  Allow user to enable/disable reminders
-    remindersEnabled: {
-      type: Boolean,
-      default: true,
-    },
-},{
-    timestamps:true 
-})
-module.exports=mongoose.model("user",userSchema);
+const problemStatsSchema = new mongoose.Schema({
+  easy: { type: Number, default: 0 },
+  medium: { type: Number, default: 0 },
+  hard: { type: Number, default: 0 },
+  contestRating: { type: Number, default: 0 },
+  totalSolved: { type: Number, default: 0 },
+  lastSolvedAt: { type: Date, default: null },
+});
+
+const userSchema = new mongoose.Schema({
+  email: { type: String, unique: true, required: true },
+  password: { type: String, required: true },
+  leetcodeUsername: { type: String, required: true },
+
+  problemStats: { type: problemStatsSchema, default: () => ({}) },
+
+  // Track when reminder was last sent
+  lastReminderSent: { type: Date, default: null },
+
+  // Allow user to enable/disable reminders
+  remindersEnabled: { type: Boolean, default: true },
+
+  // Track activity (every day user solved something)
+  activityLog: [{ type: Date }],
+
+}, {
+  timestamps: true
+});
+
+module.exports = mongoose.model("User", userSchema);

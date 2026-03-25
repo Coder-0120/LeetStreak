@@ -5,6 +5,7 @@ const dotenv=require("dotenv");
 const connectDB = require('./config/db');
 const userRoutes=require("./routes/userRoutes");
 const leetcodeRoutes=require("./routes/leetcodeRoutes");
+const adminRoutes=require("./routes/adminRoute");
 const cookieParser = require("cookie-parser");
 app.use(
   cors({
@@ -21,6 +22,7 @@ app.get("/",(req,res)=>{
     res.send("hello world");
 })
 app.use('/api/user',userRoutes);
+app.use('/api/admin',adminRoutes);
 app.use('/api/leetcode',leetcodeRoutes);
 app.listen(5000,()=>{
     console.log("Server is running on port 5000");
