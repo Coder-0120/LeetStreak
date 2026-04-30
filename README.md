@@ -2,7 +2,7 @@
 
 **LeetStreak** is a full-stack web application designed to help developers maintain consistency in competitive programming.  
 It integrates with the LeetCode GraphQL API to track user submissions, visualize coding statistics, and send automated reminder emails using a cron scheduler.
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/1685cdc8-7a6a-40eb-a5a3-0b4b7f6fcc6a" />
+<img width="1920" height="1080" alt="Screenshot (277)" src="https://github.com/user-attachments/assets/5590134a-1d6f-4bff-9ec9-70f369340adf" />
 
 
 ---
@@ -15,9 +15,10 @@ It integrates with the LeetCode GraphQL API to track user submissions, visualize
 - 📊 Visual problem-solving analytics  
 - ⏰ Automated reminder emails  
 - 🔕 Option to enable/disable reminders  
+- 🤖 AI-powered DSA Instructor for instant doubt solving  
 - 👤 Secure user authentication  
 
-It ensures you never lose consistency while giving you full control over notifications.
+It ensures you never lose consistency while also helping you **learn and improve in real-time**.
 
 ---
 
@@ -48,11 +49,35 @@ It ensures you never lose consistency while giving you full control over notific
 
 ---
 
+### 🤖 AI-Powered DSA Instructor (NEW 🚀)
+
+An integrated AI chatbot that helps users understand Data Structures & Algorithms concepts instantly.
+
+#### 💡 Features:
+- 🤖 Answers **only DSA-related questions**  
+- 📚 Provides **simple explanations with examples**  
+- 💻 Generates **code snippets when needed**  
+- 🚫 Politely rejects non-DSA queries  
+- ⚡ Real-time chat inside the dashboard  
+
+#### 🧠 How it works:
+- User asks a question from dashboard  
+- Frontend sends request via Axios  
+- Backend securely processes the request  
+- AI generates a DSA-focused response  
+- Answer is displayed instantly  
+
+#### 🔐 Security:
+- API key stored securely using environment variables  
+- No exposure of sensitive data on frontend  
+
+---
+
 ### ⏰ Automated Email Reminders  
 📨 Sends reminder emails if user hasn’t coded  
 ⏳ Cron job runs at scheduled intervals  
 📧 Email integration via backend service  
-🔕 Users can enable or disable reminders anytime from their dashboard settings  
+🔕 Users can enable or disable reminders anytime  
 
 ---
 
@@ -69,8 +94,6 @@ It ensures you never lose consistency while giving you full control over notific
 🎉 Success & error alerts  
 ⚠️ Reminder alerts  
 💡 Real-time feedback  
-<img width="538" height="538" alt="image" src="https://github.com/user-attachments/assets/d3c5cf97-8e41-4617-968c-e2627c1f87fd" />
-
 
 ---
 
@@ -83,10 +106,11 @@ It ensures you never lose consistency while giving you full control over notific
 
 ## 🛠️ Tech Stack  
 
-🖥️ Frontend: React.js  
+🖥️ Frontend: React.js + TypeScript  
 ⚙️ Backend: Node.js, Express.js  
 🗄️ Database: MongoDB  
 📡 API Integration: LeetCode GraphQL API  
+🤖 AI Integration: Google Gemini API  
 ⏰ Scheduler: Node Cron  
 📧 Email Service: SMTP / Brevo  
 
