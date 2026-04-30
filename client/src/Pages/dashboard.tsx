@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -257,6 +258,7 @@ const Dashboard: React.FC = () => {
   const [lbOpen, setLbOpen]                   = useState(false);
   const contestRef                            = useRef<HTMLCanvasElement>(null);
   const [leaderboard, setLeaderboard]         = useState<{ username: string; count: number }[]>([]);
+  const navigate = useNavigate();
 
   const fetchLeaderboard = async () => {
     try {
@@ -303,7 +305,7 @@ const Dashboard: React.FC = () => {
     } catch (err) { console.error(err); }
     finally { setLoading(false); }
   };
-
+ 
   const toggleReminders = async () => {
     if (reminderLoading || reminders === null) return;
     const next = !reminders;
@@ -415,6 +417,7 @@ const Dashboard: React.FC = () => {
             Leet<span style={{ color: "#ff6b2b" }}>Streak</span>
           </span>
         </div>
+      
 
         {/* Center slot */}
         <div className="nav-center">
@@ -447,6 +450,10 @@ const Dashboard: React.FC = () => {
         <div className="nav-right">
           {/* Trophy FAB — visible on ≤1200px */}
           <button className="lb-fab" onClick={() => setLbOpen(true)} aria-label="Open leaderboard">🏆</button>
+
+          <button className="ask-ai-btn" onClick={() => navigate("/ask")}>
+            Ask AI
+          </button>
 
           {/* Avatar + name */}
           <div className="nav-user">
@@ -783,6 +790,8 @@ body{background:#0a0a0f}
 .toggle-thumb{position:absolute;top:3px;width:16px;height:16px;border-radius:50%;transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1),background 0.25s,box-shadow 0.25s}
 .lb-fab{display:none;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.3);font-size:16px;cursor:pointer;flex-shrink:0;transition:background 0.2s}
 .lb-fab:hover{background:rgba(255,215,0,0.22)}
+.ask-ai-btn{padding:7px 12px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;border-radius:10px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:transform 0.2s,background 0.2s;flex-shrink:0}
+.ask-ai-btn:hover{transform:translateY(-1px);background:linear-gradient(135deg,#818cf8,#a78bfa)}
 
 /* ── Banner ── */
 .banner{display:flex;align-items:center;gap:10px;padding:11px 18px;backdrop-filter:blur(16px);flex-wrap:wrap;overflow:hidden;position:relative;z-index:1}
@@ -916,6 +925,7 @@ body{background:#0a0a0f}
   .nav-title{font-size:16px}
   .reminder-wrap{padding:4px 8px}
   .signout-btn{font-size:10px;padding:4px 7px}
+  .ask-ai-btn{font-size:11px;padding:4px 8px}
   .banner{padding:9px 10px;gap:8px}
   .kpi-strip{grid-template-columns:repeat(2,1fr);gap:8px}
   .kpi-card{padding:13px 10px}

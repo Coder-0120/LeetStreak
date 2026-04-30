@@ -7,6 +7,7 @@ import Dashboard from "./Pages/dashboard";
 import HomePage from "./Pages/homePage";
 import AdminLogin from "./Pages/adminLogin";
 import AdminDashboard from "./Pages/adminDashboard";
+import DsaInstructor from "./Pages/DsaInstructor";
 
 axios.defaults.baseURL = "http://localhost:5000";
 axios.defaults.withCredentials = true;
@@ -20,6 +21,7 @@ const App: React.FC = () => (
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/admin/login" element={<AdminLogin />} />
       <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      <Route path="/ask" element={<DsaInstructor />} />
     </Routes>
   </Router>
 );
